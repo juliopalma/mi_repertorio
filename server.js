@@ -14,11 +14,11 @@ app.post('/cancion', async(req, res) => {
 
         const datos = Object.values(JSON.parse(body));
 
-        const algo = await insertar(datos[0], datos[1], datos[2])
+        const inst = await insertar(datos[0], datos[1], datos[2])
 
         res.status(201)
 
-        res.send(algo)
+        res.send(inst)
     })
 })
 
