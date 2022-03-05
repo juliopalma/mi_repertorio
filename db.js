@@ -21,14 +21,11 @@ async function insertar(cancion, artista, tono) {
         return;
     }
 
-    try {
-        const res = await client.query(
-            "insert into repertorio (cancion, artista, tono) values ($1, $2, $3) returning *", [cancion, artista, tono]
-        )
-        client.release()
-    } catch (err) {
-        console.log("El error es: " + err);
-    }
+    const res = await client.query(
+        "insert into repertorio (cancion, artista, tono) values ($1, $2, $3) returning *", [cancion, artista, tono]
+    )
+    client.release()
+
 }
 
 //Consultar
@@ -43,13 +40,7 @@ async function consultar() {
         return;
     }
 
-    let res;
-    try {
-        res = await client.query({ text: `select * from repertorio` });
-    } catch (err) {
-        console.log("El error es: " + err);
-        return;
-    }
+    let res = await client.query({ text: `select * from repertorio` });
 
     client.release();
 
@@ -69,16 +60,11 @@ async function editar(id, cancion, artista, tono) {
     }
 
     let res;
-    try {
-        res = await client.query({
-            text: "update repertorio set cancion=$2, artista=$3, tono=$4 where id=$1",
-            values: [id, cancion, artista, tono]
-        });
 
-    } catch (err) {
-        console.log("El error es: " + err);
-        return;
-    }
+    res = await client.query({
+        text: "update repertorio set cancion=$2, artista=$3, tono=$4 where id=$1",
+        values: [id, cancion, artista, tono]
+    });
 
     client.release();
 
