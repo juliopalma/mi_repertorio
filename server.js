@@ -11,21 +11,26 @@ app.post('/cancion', async(req, res) => {
         body += data
     })
     req.on("end", async() => {
-
         const datos = Object.values(JSON.parse(body));
 
-        const inst = await insertar(datos[0], datos[1], datos[2])
+        try {
+            const inst = await insertar(datos[0], datos[1], datos[2])
+            res.send(inst)
+        } catch (error) {
+            res.status(201)
+        }
 
-        res.status(201)
-
-        res.send(inst)
     })
 })
 
 //Consultar
 app.get('/canciones', async(req, res) => {
-    let canciones = await consultar();
-    res.json(canciones);
+    try {
+        let canciones = await consultar();
+        res.json(canciones);
+    } catch (error) {
+        console.log("Error al realizar la consulta");
+    }
 });
 
 //Actualizar
@@ -36,17 +41,24 @@ app.put("/cancion", async(req, res) => {
     });
 
     req.on("end", async() => {
-        const datos = Object.values(JSON.parse(body));
-        const act = await editar(Number(datos[0]), datos[1], datos[2], datos[3]);
-        res.status(201).json(act);
+        try {
+            const datos = Object.values(JSON.parse(body));
+            const act = await editar(Number(datos[0]), datos[1], datos[2], datos[3]);
+            res.status(201).json(act);
+        } catch (error) {
+            console.log("El error ha sido el siguinete: " + error)
+        }
     });
 });
 
 //Eliminar
 app.delete('/cancion', async(req, res) => {
-    await eliminar(req.query.id);
-
-    res.send('Cancion eliminada de forma satisfactoria')
+    try {
+        await eliminar(req.query.id);
+        res.send('Cancion eliminada de forma satisfactoria');
+    } catch (error) {
+        console.log("El error producido es el siguiente: " + error);
+    }
 });
 
 app.listen(3000, () => console.log("Ejecutando el el puerto 3000"))
